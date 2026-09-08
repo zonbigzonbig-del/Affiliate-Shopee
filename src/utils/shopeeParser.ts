@@ -1,4 +1,5 @@
 import { ShopeeProduct, Voucher, AffiliateSettings } from '../types';
+import { parseShopeeUrlSmart } from './urlParser';
 
 // Sample curated items for quick-testing and fallback recognition
 export const SAMPLE_PRODUCTS: Partial<ShopeeProduct>[] = [
@@ -208,87 +209,8 @@ export function buildShopeeDeepLink(itemId: string, shopId: string, affiliateUrl
 
 // Parses a Shopee link into product info and applies affiliate tag
 export function parseShopeeLink(input: string, settings: AffiliateSettings): ShopeeProduct {
-  const trimmed = input.trim();
-
-  // Try to extract itemId and shopId from common Shopee patterns
-  // Pattern 1: ...-i.SHOPID.ITEMID
-  const pattern1 = /-i\.(\d+)\.(\d+)/;
-  // Pattern 2: /product/SHOPID/ITEMID
-  const pattern2 = /\/product\/(\d+)\/(\d+)/;
-  // Pattern 3: item_id=...&shop_id=...
-  const pattern3 = /item_id=(\d+).*?shop_id=(\d+)/;
-
-  let shopId = '894721';
-  let itemId = '231940129';
-
-  const m1 = trimmed.match(pattern1);
-  if (m1) {
-    shopId = m1[1];
-    itemId = m1[2];
-  } else {
-    const m2 = trimmed.match(pattern2);
-    if (m2) {
-      shopId = m2[1];
-      itemId = m2[2];
-    } else {
-      const m3 = trimmed.match(pattern3);
-      if (m3) {
-        itemId = m3[1];
-        shopId = m3[2];
-      }
-    }
-  }
-
-  // Check if matches or resembles any sample item keyword
-  const lower = trimmed.toLowerCase();
-  let matchedSample = SAMPLE_PRODUCTS.find((p) => {
-    const keywords = p.title?.toLowerCase().split(' ') || [];
-    return keywords.some((kw) => kw.length > 4 && lower.includes(kw));
-  });
-
-  if (!matchedSample) {
-    // Pick based on hash if no direct match so it's consistent
-    const charCodeSum = trimmed.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-    matchedSample = SAMPLE_PRODUCTS[charCodeSum % SAMPLE_PRODUCTS.length];
-  }
-
-  // If user pasted custom text or product title
-  let productTitle = matchedSample.title || 'Sản Phẩm Shopee Chính Hãng Cao Cấp';
-  if (!trimmed.startsWith('http') && trimmed.length > 5) {
-    productTitle = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
-  }
-
-  const originalPrice = matchedSample.originalPrice || 450000;
-  const salePrice = matchedSample.salePrice || Math.round(originalPrice * 0.75);
-  const vouchers = generateVouchersForProduct(salePrice);
-
-  const cleanUrl = trimmed.startsWith('http')
-    ? trimmed
-    : `https://shopee.vn/product/${shopId}/${itemId}`;
-
-  const affiliateUrl = buildAffiliateUrl(cleanUrl, settings);
-  const deepLink = buildShopeeDeepLink(itemId, shopId, affiliateUrl);
-
-  return {
-    id: `prod-${Date.now()}`,
-    itemId,
-    shopId,
-    title: productTitle,
-    originalPrice,
-    salePrice,
-    imageUrl: matchedSample.imageUrl || 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80',
-    shopName: matchedSample.shopName || 'Shopee Mall Official',
-    shopType: matchedSample.shopType || 'Mall',
-    rating: matchedSample.rating || 4.9,
-    reviewCount: matchedSample.reviewCount || 12400,
-    soldCount: matchedSample.soldCount || 48200,
-    category: matchedSample.category || 'Đời Sống & Tiêu Dùng',
-    commissionRate: matchedSample.commissionRate || 6.5,
-    originalUrl: cleanUrl,
-    affiliateUrl,
-    deepLink,
-    vouchers,
-  };
+  // Import dynamically or delegate to the comprehensive smart parser
+  return parseShopeeUrlSmart(input, settings);
 }
 
 // Calculate the discount and final price

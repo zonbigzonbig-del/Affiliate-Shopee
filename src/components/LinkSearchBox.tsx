@@ -8,6 +8,10 @@ interface LinkSearchBoxProps {
 
 const QUICK_EXAMPLES = [
   {
+    name: 'Loa Bluetooth M503',
+    url: 'https://shopee.vn/Loa-Bluetooth-M503-Cong-Suat-Lon-Bass-Manh-i.291578254.189237461',
+  },
+  {
     name: 'Áo Polo Coolmate',
     url: 'https://shopee.vn/Ao-Thun-Nam-Polo-Cotton-Compact-Coolmate-i.12345678.987654321',
   },
