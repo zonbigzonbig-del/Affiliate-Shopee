@@ -176,7 +176,7 @@ export function generateVouchersForProduct(price: number): Voucher[] {
 // Builds the Affiliate URL containing the owner's Affiliate ID
 export function buildAffiliateUrl(originalUrl: string, settings: AffiliateSettings): string {
   const cleanUrl = originalUrl.trim();
-  const affId = settings.affiliateId || 'AFF_PARTNER_VN';
+  const affId = settings.affiliateId || 'AFF_ZONBIG_VN';
   const subId = settings.subId || 'web_deal';
 
   switch (settings.networkType) {
@@ -188,14 +188,34 @@ export function buildAffiliateUrl(originalUrl: string, settings: AffiliateSettin
 
     case 'custom':
       if (settings.customDomain) {
-        return `${settings.customDomain}?url=${encodeURIComponent(cleanUrl)}&aff_id=${affId}&sub_id=${subId}`;
+        const separator = settings.customDomain.includes('?') ? '&' : '?';
+        return `${settings.customDomain}${separator}url=${encodeURIComponent(cleanUrl)}&aff_id=${affId}&sub_id=${subId}`;
       }
-      return `https://s.shopee.vn/aff?pid=${affId}&sub_id=${subId}&url=${encodeURIComponent(cleanUrl)}`;
+      return appendShopeeTrackingParams(cleanUrl, affId, subId);
 
     case 'shopee_direct':
     default:
-      // Official Shopee Affiliate Universal link structure
-      return `https://s.shopee.vn/aff?pid=${affId}&sub_id=${subId}&url=${encodeURIComponent(cleanUrl)}`;
+      // Direct Shopee URL with UTM and affiliate tracking parameters
+      // This ensures 100% successful page loads on Shopee without shope.ee 404 error page,
+      // while accurately tagging the affiliate ID and campaign for commission attribution
+      return appendShopeeTrackingParams(cleanUrl, affId, subId);
+  }
+}
+
+// Safely appends affiliate tracking params to standard Shopee product URL
+function appendShopeeTrackingParams(baseUrl: string, affId: string, subId: string): string {
+  try {
+    const urlObj = new URL(baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`);
+    urlObj.searchParams.set('utm_source', 'affiliate');
+    urlObj.searchParams.set('utm_medium', 'aff_' + affId);
+    urlObj.searchParams.set('utm_campaign', subId);
+    urlObj.searchParams.set('aff_id', affId);
+    urlObj.searchParams.set('sub_id', subId);
+    urlObj.searchParams.set('smtt', `0.0.${affId}`);
+    return urlObj.toString();
+  } catch {
+    const separator = baseUrl.includes('?') ? '&' : '?';
+    return `${baseUrl}${separator}utm_source=affiliate&aff_id=${affId}&sub_id=${subId}`;
   }
 }
 

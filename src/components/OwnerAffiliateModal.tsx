@@ -173,10 +173,10 @@ export const OwnerAffiliateModal: React.FC<OwnerAffiliateModalProps> = ({
                   }
                   className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm font-semibold text-gray-900 focus:outline-hidden focus:border-[#EE4D2D]"
                 >
-                  <option value="shopee_direct">Shopee Affiliate Trực Tiếp (Khuyên dùng - s.shopee.vn)</option>
+                  <option value="shopee_direct">Shopee Affiliate Trực Tiếp (Tự động gắn Tag & UTM hoa hồng)</option>
                   <option value="accesstrade">AccessTrade Việt Nam (Chiến dịch Shopee CPS)</option>
                   <option value="ecomobi">Ecomobi / Passio Creator</option>
-                  <option value="custom">Domain / Redirect Server Riêng</option>
+                  <option value="custom">Domain / Redirect Server Riêng (s.shopee.vn rút gọn)</option>
                 </select>
               </div>
 

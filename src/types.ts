@@ -43,7 +43,7 @@ export interface ShopeeProduct {
 export interface AffiliateSettings {
   affiliateId: string; // e.g., "AFF_ZONBIG_VN" or numeric ID
   subId: string; // tracking sub-id e.g. "web_deal"
-  networkType: 'shopee_direct' | 'accesstrade' | 'ecomobi' | 'custom';
+  networkType: 'shopee_direct' | 'accesstrade' | 'ecomobi' | 'custom' | 'universal_tag';
   customDomain: string; // e.g. s.shopee.vn or custom redirect
   autoApplyBestVoucher: boolean;
 }
