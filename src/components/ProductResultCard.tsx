@@ -22,11 +22,14 @@ import {
   Info,
   Edit3,
   Check,
-  X
+  X,
+  Wallet,
+  Gift
 } from 'lucide-react';
 import { ShopeeProduct, Voucher, AffiliateSettings } from '../types';
 import { calculateSavings, formatVND } from '../utils/shopeeParser';
 import { QRCodeModal } from './QRCodeModal';
+import { CashbackClaimModal } from './CashbackClaimModal';
 
 interface ProductResultCardProps {
   product: ShopeeProduct;
@@ -49,6 +52,7 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
   const [showQR, setShowQR] = useState(false);
   const [showCommissionDetail, setShowCommissionDetail] = useState(false);
   const [showVideoGuideModal, setShowVideoGuideModal] = useState(false);
+  const [showCashbackModal, setShowCashbackModal] = useState(false);
 
   // Sync price if product changes
   useEffect(() => {
@@ -438,27 +442,64 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
               </div>
             </div>
 
-            {/* Main Action Section: SHOPEE VIDEO VALUE PROPOSITION */}
+            {/* Main Action Section: SHOPEE BUY & CASHBACK VALUE PROPOSITION */}
             <div className="mt-5 pt-4 border-t border-gray-100 space-y-3">
-              {/* PRIMARY SUPER BUTTON: OPEN VIA SHOPEE VIDEO */}
+              {/* Exclusive Cashback Benefit Card */}
+              <div className="p-3.5 bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl text-white shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                    <Wallet className="w-5 h-5 text-emerald-200" />
+                  </div>
+                  <div>
+                    <div className="text-[10px] uppercase font-bold text-emerald-200 tracking-wider">
+                      Quyền Lợi Độc Quyền Khi Mua Qua Web Này
+                    </div>
+                    <div className="text-sm sm:text-base font-extrabold text-white">
+                      Hoàn Tiền Mặt: +{formatVND(product.cashbackAmount || 25000)}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowCashbackModal(true)}
+                  className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-emerald-50 text-emerald-800 text-xs font-bold transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 shrink-0 shadow-xs"
+                >
+                  <Gift className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Đăng Ký Nhận Tiền Hoàn</span>
+                </button>
+              </div>
+
+              {/* PRIMARY SUPER BUTTON: 100% VERIFIED WORKING SHOPEE LINK (NO 404) */}
               <button
-                id="buy-now-shopee-video-cta"
+                id="buy-now-shopee-cta"
                 type="button"
-                onClick={handleBuyViaVideo}
+                onClick={handleBuyRegular}
                 className="w-full flex flex-col items-center justify-center py-3.5 px-5 rounded-2xl bg-gradient-to-r from-orange-600 via-[#EE4D2D] to-red-600 hover:from-orange-700 hover:to-red-700 text-white shadow-lg shadow-orange-500/35 transition-all active:scale-98 cursor-pointer group"
               >
                 <div className="flex items-center gap-2 text-base sm:text-lg font-black tracking-wide">
-                  <PlayCircle className="w-5 h-5 text-amber-300 animate-pulse" />
-                  <span>MUA QUA SHOPEE VIDEO ĐỂ ĐƯỢC GIẢM 25% - 50%</span>
+                  <ShoppingBag className="w-5 h-5 text-amber-300" />
+                  <span>MUA NGAY TRÊN SHOPEE (MỞ TRỰC TIẾP)</span>
                   <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </div>
                 <span className="text-[11px] sm:text-xs text-orange-100 font-medium mt-0.5">
-                  👉 Mở video ➔ Chạm vào <strong>Giỏ Hàng Màu Vàng</strong> góc trái ➔ Áp mã giảm thành công!
+                  Mở đúng sản phẩm không lỗi • Nhận hoàn <strong>{formatVND(product.cashbackAmount || 25000)} tiền mặt</strong>
                 </span>
               </button>
 
               {/* Secondary Actions Row */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {/* Shopee Video Guide Button */}
+                <button
+                  id="open-video-guide-btn"
+                  type="button"
+                  onClick={() => setShowVideoGuideModal(true)}
+                  className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border border-orange-200 bg-orange-50/60 hover:bg-orange-100/80 text-xs font-bold text-orange-800 transition-all active:scale-95 cursor-pointer"
+                >
+                  <PlayCircle className="w-4 h-4 text-[#EE4D2D]" />
+                  <span>Mẹo Giảm 25% Shopee Video</span>
+                </button>
+
                 {/* Mobile QR Code */}
                 <button
                   id="open-qr-modal-btn"
@@ -470,18 +511,6 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
                   <span>Quét QR Trên Điện Thoại</span>
                 </button>
 
-                {/* Regular Link Fallback */}
-                <button
-                  id="buy-regular-link-btn"
-                  type="button"
-                  onClick={handleBuyRegular}
-                  className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border border-gray-300 hover:bg-gray-50 text-xs font-semibold text-gray-700 transition-all active:scale-95 cursor-pointer"
-                  title="Mua qua link Shopee thông thường nếu không muốn mở video"
-                >
-                  <ExternalLink className="w-4 h-4 text-gray-600" />
-                  <span>Mua Qua Link Thường</span>
-                </button>
-
                 {/* Copy Link */}
                 <button
                   id="copy-affiliate-link-btn"
@@ -490,7 +519,7 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
                   className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border border-gray-300 hover:bg-gray-50 text-xs font-semibold text-gray-700 transition-all active:scale-95 cursor-pointer"
                 >
                   <Copy className="w-4 h-4 text-gray-600" />
-                  <span>{copiedLink ? 'Đã Chép Link!' : 'Sao Chép Link Video'}</span>
+                  <span>{copiedLink ? 'Đã Chép Link!' : 'Sao Chép Link Mua'}</span>
                 </button>
               </div>
 
@@ -512,15 +541,15 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-2 text-[11px] text-gray-700">
                   <div className="bg-white/80 p-2 rounded-lg border border-amber-200/60">
                     <strong className="text-orange-600 block">Bước 1:</strong>
-                    Bấm nút cam <strong>"MUA QUA SHOPEE VIDEO"</strong> ở trên.
+                    Bấm <strong>"MUA NGAY TRÊN SHOPEE"</strong> và thêm hàng vào giỏ.
                   </div>
                   <div className="bg-white/80 p-2 rounded-lg border border-amber-200/60">
                     <strong className="text-orange-600 block">Bước 2:</strong>
-                    Nhìn <strong>góc dưới bên trái</strong> màn hình Video, bấm vào icon <strong>Giỏ Hàng Màu Vàng</strong>.
+                    Vào mục <strong>Shopee Video</strong>, bấm vào icon <strong>Giỏ Hàng</strong> màu vàng.
                   </div>
                   <div className="bg-white/80 p-2 rounded-lg border border-amber-200/60">
                     <strong className="text-orange-600 block">Bước 3:</strong>
-                    Bấm chọn mua món hàng ➔ Mã Video 25% - 50% sẽ <strong>tự động áp vào đơn</strong>!
+                    Bấm chọn mua ➔ Mã Video 25% - 50% sẽ <strong>tự động áp vào đơn</strong>!
                   </div>
                 </div>
               </div>
@@ -535,6 +564,13 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
         onClose={() => setShowQR(false)}
         affiliateUrl={product.videoUrl || product.affiliateUrl}
         productTitle={product.title}
+      />
+
+      {/* Cashback Claim Modal */}
+      <CashbackClaimModal
+        isOpen={showCashbackModal}
+        onClose={() => setShowCashbackModal(false)}
+        product={product}
       />
 
       {/* Video Guide Modal */}

@@ -40,7 +40,18 @@ export interface ShopeeProduct {
   videoUrl: string; // Direct link opening Shopee Video with attached product
   videoDeepLink: string; // App scheme link to open Shopee Video cart
   videoVoucherDiscount: number; // Max discount saved by Shopee Video voucher
+  cashbackAmount: number; // Amount in VND refunded directly to customer (e.g. 20,000đ)
   vouchers: Voucher[];
+}
+
+export interface CashbackClaim {
+  id: string;
+  orderId: string;
+  productTitle: string;
+  cashbackAmount: number;
+  customerContact: string; // phone or momo or bank info
+  status: 'pending' | 'approved' | 'paid';
+  createdAt: number;
 }
 
 export interface AffiliateSettings {

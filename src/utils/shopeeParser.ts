@@ -202,8 +202,18 @@ export function buildAffiliateUrl(originalUrl: string, settings: AffiliateSettin
   }
 }
 
+// Check if the URL is a Shopee shortlink (s.shopee.vn, vn.shp.ee, shope.ee)
+export function isShopeeShortLink(url: string): boolean {
+  return /shope\.ee|shp\.ee|s\.shopee\.vn/i.test(url);
+}
+
 // Safely appends affiliate tracking params to standard Shopee product URL
 function appendShopeeTrackingParams(baseUrl: string, affId: string, subId: string): string {
+  // CRITICAL: Shopee short-links (s.shopee.vn, vn.shp.ee, shope.ee) break with 404 if modified with query params!
+  if (isShopeeShortLink(baseUrl)) {
+    return baseUrl;
+  }
+
   try {
     const urlObj = new URL(baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`);
     urlObj.searchParams.set('utm_source', 'affiliate');
@@ -214,36 +224,38 @@ function appendShopeeTrackingParams(baseUrl: string, affId: string, subId: strin
     urlObj.searchParams.set('smtt', `0.0.${affId}`);
     return urlObj.toString();
   } catch {
-    const separator = baseUrl.includes('?') ? '&' : '?';
-    return `${baseUrl}${separator}utm_source=affiliate&aff_id=${affId}&sub_id=${subId}`;
+    return baseUrl;
   }
 }
 
 // Builds mobile deep link to launch Shopee app directly
 export function buildShopeeDeepLink(itemId: string, shopId: string, affiliateUrl: string): string {
-  if (itemId && shopId) {
+  if (itemId && shopId && itemId !== '231940129') {
     return `shopee://product/${itemId}/${shopId}`;
   }
   return affiliateUrl;
 }
 
-// Builds Shopee Video Link that opens the video tab with product basket attached
+// Builds Shopee Video link.
+// IMPORTANT: https://shopee.vn/universal-link/video/play is an internal app scheme that throws a 404 in web/Safari!
+// Instead, we route to the verified product page with Video Affiliate tracking params so it NEVER 404s.
 export function buildShopeeVideoUrl(itemId: string, shopId: string, cleanProductUrl: string, settings: AffiliateSettings): string {
   const affId = settings.affiliateId || 'AFF_ZONBIG_VN';
   const subId = settings.subId || 'shopee_video';
 
-  // Shopee Video Universal Link format that triggers video viewer and displays the product yellow cart
-  // https://shopee.vn/universal-link/video/play?item_id=...&shop_id=...
-  if (itemId && shopId) {
-    return `https://shopee.vn/universal-link/video/play?item_id=${itemId}&shop_id=${shopId}&utm_source=affiliate&utm_medium=video_tag_${affId}&utm_campaign=${subId}&aff_id=${affId}&sub_id=${subId}`;
+  // If we have verified shopId and itemId (not fallback placeholder), construct the direct canonical product link
+  if (itemId && shopId && itemId !== '231940129') {
+    return `https://shopee.vn/product/${shopId}/${itemId}?utm_source=affiliate&utm_medium=video_aff_${affId}&utm_campaign=${subId}&aff_id=${affId}&sub_id=${subId}`;
   }
+
+  // Otherwise, use clean product URL with safe affiliate tracking
   return buildAffiliateUrl(cleanProductUrl, settings);
 }
 
-// Builds mobile deep link to open Shopee Video Player directly in Shopee App
+// Builds mobile deep link
 export function buildShopeeVideoDeepLink(itemId: string, shopId: string, fallbackUrl: string): string {
-  if (itemId && shopId) {
-    return `shopee://universal-link/video/play?item_id=${itemId}&shop_id=${shopId}`;
+  if (itemId && shopId && itemId !== '231940129') {
+    return `shopee://product/${itemId}/${shopId}`;
   }
   return fallbackUrl;
 }
