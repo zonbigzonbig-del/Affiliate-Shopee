@@ -75,13 +75,13 @@ export const LinkSearchBox: React.FC<LinkSearchBoxProps> = ({
       <div className="text-center max-w-2xl mx-auto mb-5 sm:mb-6">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 border border-orange-200/70 text-[#EE4D2D] text-xs font-semibold mb-2">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>⚡ Tự Động Gắn Tag Shopee Video — Kích Hoạt Mã Giảm Sâu Đến 50%</span>
+          <span>⚡ Tự Động Kích Hoạt Mã Giảm Sâu Hơn Tự Vào Mua Trên Shopee</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-          Dán Link Shopee — Mở Qua Video Để Giảm Thêm 25% - 50%
+          Dán Link Shopee — Tự Động Áp Mã Giảm Rẻ Hơn Tự Vào Mua
         </h1>
         <p className="text-sm sm:text-base text-gray-600 mt-1.5">
-          Sản phẩm tìm kiếm thông thường <span className="underline decoration-red-400 font-semibold">không thể áp mã Shopee Video</span>. Dán link vào đây để tự động gắn vào Video, mở mua là được <strong className="text-[#EE4D2D]">trừ thêm đến 70.000đ - 100.000đ</strong> và Freeship!
+          Khi tự vào Shopee tìm kiếm, bạn <span className="underline decoration-red-400 font-semibold">bị khóa không áp được voucher Video 25%</span> và không có mã đối tác độc quyền. Dán link vào đây để hệ thống tự động mở khóa đủ 4 tầng mã, <strong className="text-[#EE4D2D]">tiết kiệm thêm đến 70.000đ - 150.000đ</strong> và Freeship 0đ!
         </p>
       </div>
 
@@ -134,11 +134,11 @@ export const LinkSearchBox: React.FC<LinkSearchBoxProps> = ({
               {isLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Đang dò mã...</span>
+                  <span>Đang dò 4 tầng mã...</span>
                 </>
               ) : (
                 <>
-                  <span>Gắn Tag Video & Lấy Link Giảm</span>
+                  <span>Tự Động Áp Mã & Mua Rẻ Hơn</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}

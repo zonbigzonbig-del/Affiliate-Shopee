@@ -10,10 +10,9 @@ import {
   ExternalLink,
   History,
   Trash2,
-  Sparkles,
-  Wallet
+  Sparkles
 } from 'lucide-react';
-import { AffiliateSettings, ConvertedHistoryItem, CashbackClaim } from '../types';
+import { AffiliateSettings, ConvertedHistoryItem } from '../types';
 import { formatVND } from '../utils/shopeeParser';
 
 interface OwnerAffiliateModalProps {
@@ -33,29 +32,9 @@ export const OwnerAffiliateModal: React.FC<OwnerAffiliateModalProps> = ({
   history,
   onClearHistory,
 }) => {
-  const [activeTab, setActiveTab] = useState<'config' | 'commission' | 'history' | 'cashback'>('config');
+  const [activeTab, setActiveTab] = useState<'config' | 'commission' | 'history'>('config');
   const [form, setForm] = useState<AffiliateSettings>({ ...settings });
   const [savedSuccess, setSavedSuccess] = useState(false);
-  const [claims, setClaims] = useState<CashbackClaim[]>(() => {
-    try {
-      const stored = localStorage.getItem('shopee_cashback_claims');
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const handleUpdateClaimStatus = (id: string, newStatus: CashbackClaim['status']) => {
-    const updated = claims.map((c) => (c.id === id ? { ...c, status: newStatus } : c));
-    setClaims(updated);
-    localStorage.setItem('shopee_cashback_claims', JSON.stringify(updated));
-  };
-
-  const handleDeleteClaim = (id: string) => {
-    const updated = claims.filter((c) => c.id !== id);
-    setClaims(updated);
-    localStorage.setItem('shopee_cashback_claims', JSON.stringify(updated));
-  };
 
   if (!isOpen) return null;
 
@@ -133,19 +112,6 @@ export const OwnerAffiliateModal: React.FC<OwnerAffiliateModalProps> = ({
           >
             <History className="w-3.5 h-3.5" />
             <span>Lịch Sử Chuyển Đổi ({history.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('cashback')}
-            className={`py-2.5 px-3 rounded-t-lg transition-colors border-b-2 flex items-center gap-1.5 ${
-              activeTab === 'cashback'
-                ? 'border-emerald-600 text-emerald-700 bg-white'
-                : 'border-transparent text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <Wallet className="w-3.5 h-3.5" />
-            <span>Đơn Hoàn Tiền ({claims.length})</span>
           </button>
         </div>
 
@@ -409,84 +375,6 @@ export const OwnerAffiliateModal: React.FC<OwnerAffiliateModalProps> = ({
                         <span className="font-bold text-[#EE4D2D]">
                           +{formatVND(item.estimatedCommission)} hoa hồng
                         </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'cashback' && (
-            <div className="space-y-4">
-              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 leading-relaxed">
-                <strong>Quản lý yêu cầu Hoàn Tiền Mặt của khách hàng:</strong> Khi khách mua hàng qua link của bạn và gửi mã đơn hàng Shopee kèm số MoMo/STK, các đơn sẽ được liệt kê tại đây. Sau khi Shopee duyệt hoa hồng, bạn chuyển tiền hoàn cho khách và bấm "Đã Thanh Toán".
-              </div>
-
-              {claims.length === 0 ? (
-                <div className="text-center py-10 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                  <Wallet className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-xs text-gray-500 font-medium">Chưa có khách hàng nào gửi yêu cầu hoàn tiền.</p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">Yêu cầu hoàn tiền sẽ xuất hiện tại đây khi khách nhập mã đơn Shopee.</p>
-                </div>
-              ) : (
-                <div className="space-y-2.5">
-                  {claims.map((claim) => (
-                    <div
-                      key={claim.id}
-                      className="p-3.5 bg-white border border-gray-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-xs"
-                    >
-                      <div className="space-y-1 min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded border border-gray-300">
-                            #{claim.orderId}
-                          </span>
-                          <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                              claim.status === 'paid'
-                                ? 'bg-emerald-100 text-emerald-700'
-                                : claim.status === 'approved'
-                                ? 'bg-blue-100 text-blue-700'
-                                : 'bg-amber-100 text-amber-800'
-                            }`}
-                          >
-                            {claim.status === 'paid'
-                              ? 'Đã chuyển tiền'
-                              : claim.status === 'approved'
-                              ? 'Đã duyệt đơn'
-                              : 'Chờ đối soát'}
-                          </span>
-                        </div>
-                        <p className="font-medium text-gray-700 line-clamp-1">{claim.productTitle}</p>
-                        <p className="text-[11px] text-gray-500">
-                          <strong>Nhận tiền:</strong> {claim.customerContact}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
-                        <div className="text-right mr-2">
-                          <span className="text-[11px] text-gray-500 block">Tiền hoàn:</span>
-                          <span className="font-bold text-emerald-700 text-sm">{formatVND(claim.cashbackAmount)}</span>
-                        </div>
-
-                        {claim.status !== 'paid' && (
-                          <button
-                            type="button"
-                            onClick={() => handleUpdateClaimStatus(claim.id, 'paid')}
-                            className="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold transition-all active:scale-95 cursor-pointer"
-                          >
-                            Xác Nhận Đã Chuyển
-                          </button>
-                        )}
-
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteClaim(claim.id)}
-                          className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                          title="Xóa yêu cầu này"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
                       </div>
                     </div>
                   ))}

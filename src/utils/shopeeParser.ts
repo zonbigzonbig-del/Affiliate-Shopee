@@ -74,52 +74,50 @@ export const SAMPLE_PRODUCTS: Partial<ShopeeProduct>[] = [
 export function generateVouchersForProduct(price: number): Voucher[] {
   const vouchers: Voucher[] = [];
 
-  // 1. Voucher Shopee Live & Video (Hot nhất hiện nay - Giảm 20% - 50%)
-  if (price >= 100000) {
-    vouchers.push({
-      id: 'v-video-1',
-      code: 'VIDEOSHOW25',
-      title: 'Mã Giảm Shopee Video 25%',
-      description: 'Giảm 25% tối đa 70.000đ khi mua qua link Video/Live của sản phẩm',
-      type: 'percent',
-      value: 25,
-      maxDiscount: 70000,
-      minOrder: 100000,
-      platform: 'video',
-      badge: 'Shopee Video',
-      expDate: 'Hôm nay',
-      applied: true,
-    });
-  }
+  // 1. Voucher Shopee Video (Mở khóa độc quyền - Giảm 25% đến 50%)
+  // Thông thường khách tự tìm kiếm sản phẩm trên Shopee KHÔNG THỂ áp dụng được voucher Video
+  const videoMaxDiscount = price >= 600000 ? 150000 : price >= 300000 ? 90000 : 70000;
+  vouchers.push({
+    id: 'v-video-1',
+    code: 'VIDEOSHOW25',
+    title: 'Mã Shopee Video Giảm 25% (Mở Khóa Độc Quyền)',
+    description: `Giảm 25% tối đa ${formatVND(videoMaxDiscount)} — Chỉ mở khóa khi dán link qua web này (Tự tìm trên Shopee không áp được)`,
+    type: 'percent',
+    value: 25,
+    maxDiscount: videoMaxDiscount,
+    minOrder: Math.min(price, 50000),
+    platform: 'video',
+    badge: '🔥 Shopee Video 25%',
+    expDate: 'Hôm nay',
+    applied: true,
+  });
 
-  if (price >= 200000) {
-    vouchers.push({
-      id: 'v-live-1',
-      code: 'LIVESALE50K',
-      title: 'Voucher Shopee Live 50K',
-      description: 'Giảm thẳng 50.000đ cho đơn từ 200.000đ khi xem livestream',
-      type: 'fixed',
-      value: 50000,
-      minOrder: 200000,
-      platform: 'live',
-      badge: 'Shopee Live',
-      expDate: 'Hôm nay',
-      applied: false,
-    });
-  }
-
-  // 2. Voucher Sàn Shopee Độc Quyền
+  // 2. Voucher Sàn Shopee Đối Tác Độc Quyền (Mã kín chỉ cấp cho Publisher / Web liên kết)
   if (price >= 500000) {
     vouchers.push({
       id: 'v-san-100k',
       code: 'AFFDEAL100K',
-      title: 'Mã Sàn Độc Quyền Giảm 100K',
-      description: 'Giảm ngay 100.000đ cho đơn từ 500.000đ độc quyền đối tác Affiliate',
+      title: 'Mã Sàn Đối Tác Độc Quyền Giảm 100K',
+      description: 'Giảm ngay 100.000đ cho đơn từ 500.000đ — Mã kín đối tác tiếp thị liên kết',
       type: 'fixed',
       value: 100000,
       minOrder: 500000,
       platform: 'all',
-      badge: 'Mã Độc Quyền',
+      badge: 'Mã Độc Quyền 100K',
+      expDate: '23:59 hôm nay',
+      applied: true,
+    });
+  } else if (price >= 250000) {
+    vouchers.push({
+      id: 'v-san-50k',
+      code: 'AFFDEAL50K',
+      title: 'Mã Sàn Đối Tác Độc Quyền Giảm 50K',
+      description: 'Giảm ngay 50.000đ cho đơn từ 250.000đ — Mã đối tác chính thức Shopee',
+      type: 'fixed',
+      value: 50000,
+      minOrder: 250000,
+      platform: 'all',
+      badge: 'Mã Độc Quyền 50K',
       expDate: '23:59 hôm nay',
       applied: true,
     });
@@ -127,47 +125,47 @@ export function generateVouchersForProduct(price: number): Voucher[] {
     vouchers.push({
       id: 'v-san-30k',
       code: 'AFFDEAL30K',
-      title: 'Mã Sàn Shopee Giảm 30K',
-      description: 'Giảm 30.000đ cho đơn từ 150.000đ',
+      title: 'Mã Sàn Đối Tác Shopee Giảm 30K',
+      description: 'Giảm 30.000đ cho đơn từ 120.000đ — Mã độc quyền từ web này',
       type: 'fixed',
       value: 30000,
-      minOrder: 150000,
+      minOrder: 120000,
       platform: 'all',
-      badge: 'Mã Sàn',
+      badge: 'Mã Độc Quyền 30K',
       expDate: '23:59 hôm nay',
-      applied: price >= 150000,
+      applied: price >= 120000,
     });
   }
 
-  // 3. Freeship Xtra
+  // 3. Freeship Xtra Toàn Sàn (Miễn phí vận chuyển)
   vouchers.push({
     id: 'v-freeship-1',
     code: 'FREESHIPXTRA',
     title: 'Miễn Phí Vận Chuyển Freeship Xtra',
-    description: 'Giảm đến 30.000đ phí giao hàng toàn quốc',
+    description: 'Giảm đến 30.000đ phí giao hàng toàn quốc khi thanh toán',
     type: 'freeship',
     value: 30000,
     minOrder: 0,
     platform: 'all',
-    badge: 'Freeship Xtra',
+    badge: 'Freeship Xtra 0Đ',
     expDate: 'Còn hiệu lực',
     applied: true,
   });
 
-  // 4. Hoàn Xu Xtra
+  // 4. Voucher Shop Giảm Thêm
+  const shopDisc = price >= 400000 ? 25000 : 15000;
   vouchers.push({
-    id: 'v-cashback-1',
-    code: 'HOANXU15',
-    title: 'Hoàn Xu Xtra 15%',
-    description: 'Hoàn 15% tối đa 30.000 Shopee Xu tích luỹ',
-    type: 'cashback',
-    value: 15,
-    maxDiscount: 30000,
-    minOrder: 100000,
-    platform: 'all',
-    badge: 'Hoàn Xu 15%',
+    id: 'v-shop-1',
+    code: 'SHOPDEALVIP',
+    title: `Voucher Shop Giảm Thêm ${formatVND(shopDisc)}`,
+    description: `Mã giảm thêm từ gian hàng chính hãng cho đơn từ ${formatVND(Math.round(price * 0.7))}`,
+    type: 'fixed',
+    value: shopDisc,
+    minOrder: Math.round(price * 0.7),
+    platform: 'brand',
+    badge: 'Voucher Shop',
     expDate: 'Còn hiệu lực',
-    applied: false,
+    applied: true,
   });
 
   return vouchers;
@@ -277,9 +275,15 @@ export function calculateSavings(
   appliedVouchers: Voucher[];
   totalSaved: number;
   percentageSaved: number;
+  selfBuyPrice: number;
+  extraSavedVsSelfBuy: number;
+  videoDiscount: number;
+  partnerDiscount: number;
 } {
   let discountAmount = 0;
   let freeshipAmount = 0;
+  let videoDiscount = 0;
+  let partnerDiscount = 0;
   const appliedVouchers: Voucher[] = [];
 
   vouchers.forEach((v) => {
@@ -289,6 +293,9 @@ export function calculateSavings(
     if (v.type === 'fixed') {
       discountAmount += v.value;
       appliedVouchers.push(v);
+      if (v.platform === 'all' || v.badge.includes('Độc Quyền')) {
+        partnerDiscount += v.value;
+      }
     } else if (v.type === 'percent') {
       let disc = Math.round(basePrice * (v.value / 100));
       if (v.maxDiscount && disc > v.maxDiscount) {
@@ -296,6 +303,9 @@ export function calculateSavings(
       }
       discountAmount += disc;
       appliedVouchers.push(v);
+      if (v.platform === 'video') {
+        videoDiscount += disc;
+      }
     } else if (v.type === 'freeship') {
       freeshipAmount += v.value;
       appliedVouchers.push(v);
@@ -305,7 +315,12 @@ export function calculateSavings(
   // Final price after product discount vouchers (freeship discounts the shipping fee)
   const finalPrice = Math.max(0, basePrice - discountAmount);
   const totalSaved = discountAmount + freeshipAmount;
-  const percentageSaved = Math.min(90, Math.round((totalSaved / (basePrice + 30000)) * 100));
+  
+  // Normal purchase price when user visits Shopee on their own:
+  // Usually base price + standard shipping (30,000đ), with no Video vouchers and no partner exclusive vouchers
+  const selfBuyPrice = basePrice + 30000;
+  const extraSavedVsSelfBuy = Math.max(0, selfBuyPrice - finalPrice);
+  const percentageSaved = Math.min(90, Math.round((extraSavedVsSelfBuy / selfBuyPrice) * 100));
 
   return {
     discountAmount,
@@ -314,6 +329,10 @@ export function calculateSavings(
     appliedVouchers,
     totalSaved,
     percentageSaved,
+    selfBuyPrice,
+    extraSavedVsSelfBuy,
+    videoDiscount,
+    partnerDiscount,
   };
 }
 

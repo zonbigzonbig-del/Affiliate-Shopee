@@ -241,10 +241,6 @@ export function parseShopeeUrlSmart(
   // Shopee Video vouchers typically give 20% - 25% discount, capped at 70,000 VND
   const videoVoucherDiscount = Math.min(Math.round(salePrice * 0.25), 70000);
 
-  // Direct Cashback for customer: Share 50-60% of affiliate commission as pure cash refund
-  const estimatedCommission = Math.round((salePrice * matchedCategory.commissionRate) / 100);
-  const cashbackAmount = Math.max(10000, Math.round((estimatedCommission * 0.6) / 1000) * 1000);
-
   return {
     id: `prod-${Date.now()}`,
     itemId,
@@ -266,7 +262,6 @@ export function parseShopeeUrlSmart(
     videoUrl,
     videoDeepLink,
     videoVoucherDiscount,
-    cashbackAmount,
     vouchers,
   };
 }
