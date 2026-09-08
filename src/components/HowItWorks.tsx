@@ -6,6 +6,11 @@ export const HowItWorks: React.FC = () => {
 
   const faqs = [
     {
+      icon: <Zap className="w-4 h-4 text-[#EE4D2D]" />,
+      q: 'Có cách nào áp nhiều mã vào để được lợi hơn khi tự vào Shopee mua không?',
+      a: 'CÓ! Shopee chính thức cho phép bạn CHỒNG CÙNG LÚC 4 TẦNG MÃ trong 1 đơn hàng: (1) Mã Giảm Giá Của Shop; (2) Mã Shopee Video 25% (được mở khóa qua web này); (3) Mã Freeship; (4) Ưu Đãi Thanh Toán SPayLater / Ngân Hàng. Bình thường khi bạn tự vào Shopee, bạn chỉ tick 1 mã Freeship và mã Video 25% bị khóa xám nếu shop chưa có video. Khi dán link qua web này, sản phẩm được mở khóa mã Video 25% và chép sẵn mã độc quyền để bạn tick gộp đủ cả 4 mã, giảm sâu hơn rất nhiều!',
+    },
+    {
       icon: <HelpCircle className="w-4 h-4 text-red-600" />,
       q: 'Tại sao vào thanh toán vẫn phải tự bấm chọn Shopee Voucher mới được giảm?',
       a: 'Theo chính sách bảo mật của Shopee, không một trang web hay đường link bên ngoài nào có thể tự ý can thiệp vào giỏ hàng của bạn để tự tick mã giảm tiền hàng (Shopee chỉ tự động chọn mã Freeship). Do đó, tại màn hình Thanh toán, bạn chỉ cần bấm vào dòng "Shopee Voucher" 👉 Tick chọn mã Shopee Video 25% (hoặc dán mã độc quyền mà web đã tự động chép sẵn) 👉 Bấm "Đồng ý" là tiền sẽ được trừ ngay! Lợi ích lớn nhất của web này là giúp bạn MỞ KHÓA được mã Video 25% (nếu tự vào Shopee mua bình thường thì mã này sẽ bị khóa hoàn toàn, không thể chọn được).',

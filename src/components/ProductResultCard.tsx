@@ -30,7 +30,9 @@ import {
   History,
   LineChart,
   Gift,
-  ShieldAlert
+  ShieldAlert,
+  Layers,
+  CreditCard
 } from 'lucide-react';
 import { ShopeeProduct, Voucher, AffiliateSettings } from '../types';
 import { calculateSavings, formatVND } from '../utils/shopeeParser';
@@ -59,6 +61,7 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
   const [showVideoGuideModal, setShowVideoGuideModal] = useState(false);
   const [showCheckoutGuideModal, setShowCheckoutGuideModal] = useState(false);
   const [showPriceHistoryModal, setShowPriceHistoryModal] = useState(false);
+  const [showStackingGuideModal, setShowStackingGuideModal] = useState(false);
   const [autoApplyToast, setAutoApplyToast] = useState(true);
 
   // Sync price if product changes
@@ -300,7 +303,28 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
                   </div>
                   <span className="font-black text-emerald-600 text-xs">-{formatVND(freeshipAmount)}</span>
                 </div>
+
+                <div className="flex items-center justify-between p-2 rounded-lg bg-indigo-50/80 border border-indigo-100 text-indigo-950">
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-[10px]">4</span>
+                    <div>
+                      <span className="font-extrabold text-[11px]">Ưu Đãi SPayLater / Ngân Hàng:</span>
+                      <span className="text-[10px] text-indigo-700 block">Giảm thêm khi chọn thanh toán đối tác</span>
+                    </div>
+                  </div>
+                  <span className="font-black text-indigo-600 text-xs">-30.000đ</span>
+                </div>
               </div>
+
+              {/* Stacking Guide Action Banner */}
+              <button
+                type="button"
+                onClick={() => setShowStackingGuideModal(true)}
+                className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 text-white text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-xs hover:opacity-95 transition-all cursor-pointer"
+              >
+                <Layers className="w-4 h-4" />
+                <span>Xem Cách Chồng 4 Tầng Mã Này Cùng 1 Lúc »</span>
+              </button>
 
               {/* Price Checker Action */}
               <div className="pt-1 flex items-center justify-between text-[11px]">
@@ -1091,6 +1115,127 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
                 className="px-4 py-2 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl cursor-pointer"
               >
                 Đã Hiểu & Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4-Tier Voucher Stacking Guide Modal */}
+      {showStackingGuideModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-orange-200 flex flex-col max-h-[90vh]">
+            <div className="p-4 bg-gradient-to-r from-[#EE4D2D] via-orange-600 to-amber-600 text-white flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Layers className="w-5 h-5 text-amber-200" />
+                <div>
+                  <h3 className="font-extrabold text-base leading-tight">Mẹo Chồng 4 Tầng Mã Giảm Giá Cùng 1 Đơn</h3>
+                  <p className="text-[11px] text-orange-100">Bí quyết người mua thông minh giảm sâu hơn tự mua</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowStackingGuideModal(false)}
+                className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-4 overflow-y-auto text-xs text-gray-700">
+              {/* Introduction Banner */}
+              <div className="p-3.5 bg-amber-50 border border-amber-300 rounded-xl space-y-1.5 text-amber-950">
+                <div className="font-black text-xs flex items-center gap-1.5 text-amber-900">
+                  <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+                  <span>QUY ĐỊNH CỦA SHOPEE: ĐƯỢC PHÉP ÁP CÙNG LÚC 4 LOẠI MÃ!</span>
+                </div>
+                <p className="text-[11px] leading-relaxed text-gray-700">
+                  Rất nhiều người tự vào Shopee mua hàng chỉ tick đúng <strong>1 mã Freeship</strong> rồi bấm đặt hàng vì không biết rằng Shopee cho phép <strong>GỘP CHỒNG 4 MÃ KHÁC NHAU</strong> trong cùng 1 lần thanh toán:
+                </p>
+              </div>
+
+              {/* 4 Stacking Tiers Visual Breakdown */}
+              <div className="space-y-2">
+                <div className="p-3 rounded-xl bg-orange-50/80 border border-orange-200 flex items-start gap-3">
+                  <span className="w-6 h-6 rounded-full bg-orange-600 text-white font-black text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <strong className="text-gray-900 text-xs">Mã Giảm Giá Của Shop (Shop Voucher)</strong>
+                      <span className="text-orange-600 font-extrabold text-xs">-20.000đ đến -50.000đ</span>
+                    </div>
+                    <p className="text-[11px] text-gray-600 mt-0.5">
+                      Lưu ngay dưới phần giá sản phẩm trước khi thêm vào giỏ hàng (Mã theo dõi Shop, Mã đơn đầu tiên, Mã giảm 5-10%).
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-red-50/80 border border-red-200 flex items-start gap-3">
+                  <span className="w-6 h-6 rounded-full bg-red-600 text-white font-black text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <strong className="text-red-900 text-xs">Mã Shopee Video 25% (Qua Web Này)</strong>
+                      <span className="text-red-600 font-extrabold text-xs">Giảm 25% (Đến 200.000đ)</span>
+                    </div>
+                    <p className="text-[11px] text-gray-600 mt-0.5">
+                      Nếu tự mua sản phẩm thường sẽ bị khóa xám. Khi dán link qua web này, sản phẩm được gắn tag để <strong>mở khóa mã Video 25%</strong> ngay trong mục Shopee Voucher.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-emerald-50/80 border border-emerald-200 flex items-start gap-3">
+                  <span className="w-6 h-6 rounded-full bg-emerald-600 text-white font-black text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <strong className="text-emerald-900 text-xs">Mã Miễn Phí Vận Chuyển (Freeship Xtra)</strong>
+                      <span className="text-emerald-600 font-extrabold text-xs">-30.000đ đến -70.000đ</span>
+                    </div>
+                    <p className="text-[11px] text-gray-600 mt-0.5">
+                      Shopee cho phép tick chọn cùng lúc <strong>cả Mã Freeship VÀ Mã Giảm Giá Video</strong> trong cùng một ô "Shopee Voucher".
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-indigo-50/80 border border-indigo-200 flex items-start gap-3">
+                  <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-black text-xs flex items-center justify-center shrink-0 mt-0.5">4</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <strong className="text-indigo-900 text-xs">Ưu Đãi Thanh Toán (SPayLater / Ngân Hàng)</strong>
+                      <span className="text-indigo-600 font-extrabold text-xs">Giảm thêm 30.000đ - 50.000đ</span>
+                    </div>
+                    <p className="text-[11px] text-gray-600 mt-0.5">
+                      Tại bước chọn hình thức thanh toán: Chọn thanh toán bằng SPayLater (trả sau) hoặc liên kết Thẻ Tín Dụng đối tác (VPBank, TPBank, JCB...) để nhận thêm mã giảm của ngân hàng.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step-by-Step Action Checklist */}
+              <div className="p-3.5 bg-gray-50 border border-gray-200 rounded-xl space-y-2">
+                <div className="font-extrabold text-gray-900 text-xs">📋 3 BƯỚC ĐỂ KHÁCH ÁP TRỌN VẸN 4 MÃ:</div>
+                <div className="space-y-1.5 text-[11px]">
+                  <div className="flex items-start gap-2">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Bước 1:</strong> Bấm nút <em>"Mở Shopee Đặt Hàng"</em> trên web này để sản phẩm được tự động kích hoạt mã Video 25%.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Bước 2:</strong> Vào thanh toán 👉 bấm mục <strong>"Shopee Voucher"</strong> 👉 Tick chọn 1 lúc cả <strong>Mã Freeship</strong> VÀ <strong>Mã Video 25%</strong>.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Bước 3:</strong> Tại mục <strong>"Phương thức thanh toán"</strong> 👉 chọn SPayLater hoặc Ví ShopeePay để hưởng thêm giảm giá tầng thứ 4!</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-3.5 bg-gray-50 border-t border-gray-200 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowStackingGuideModal(false)}
+                className="px-5 py-2.5 bg-[#EE4D2D] hover:bg-[#D43F1F] text-white text-xs font-bold rounded-xl cursor-pointer"
+              >
+                Đã Hiểu Mẹo Chồng Mã
               </button>
             </div>
           </div>
