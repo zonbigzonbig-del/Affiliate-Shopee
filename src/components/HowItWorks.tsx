@@ -6,6 +6,11 @@ export const HowItWorks: React.FC = () => {
 
   const faqs = [
     {
+      icon: <HelpCircle className="w-4 h-4 text-red-600" />,
+      q: 'Tại sao vào thanh toán vẫn phải tự bấm chọn Shopee Voucher mới được giảm?',
+      a: 'Theo chính sách bảo mật của Shopee, không một trang web hay đường link bên ngoài nào có thể tự ý can thiệp vào giỏ hàng của bạn để tự tick mã giảm tiền hàng (Shopee chỉ tự động chọn mã Freeship). Do đó, tại màn hình Thanh toán, bạn chỉ cần bấm vào dòng "Shopee Voucher" 👉 Tick chọn mã Shopee Video 25% (hoặc dán mã độc quyền mà web đã tự động chép sẵn) 👉 Bấm "Đồng ý" là tiền sẽ được trừ ngay! Lợi ích lớn nhất của web này là giúp bạn MỞ KHÓA được mã Video 25% (nếu tự vào Shopee mua bình thường thì mã này sẽ bị khóa hoàn toàn, không thể chọn được).',
+    },
+    {
       icon: <Gift className="w-4 h-4 text-orange-600" />,
       q: 'Tại sao khách hàng PHẢI dán link qua web này thay vì mua trực tiếp trên Shopee?',
       a: 'Shopee có các voucher độc quyền: Shopee Video giảm 20% - 50% (lên đến 70.000đ - 100.000đ). Tuy nhiên nếu khách tự tìm kiếm sản phẩm trên Shopee thì KHÔNG THỂ áp dụng được các mã này. Khi dán link vào web, hệ thống sẽ tự động gắn sản phẩm vào Giỏ hàng Shopee Video của bạn, giúp khách hàng mở khóa mức giảm sâu chưa từng có!',

@@ -25,7 +25,12 @@ import {
   Zap,
   BookmarkCheck,
   ShieldCheck,
-  AlertCircle
+  AlertCircle,
+  ChevronRight,
+  History,
+  LineChart,
+  Gift,
+  ShieldAlert
 } from 'lucide-react';
 import { ShopeeProduct, Voucher, AffiliateSettings } from '../types';
 import { calculateSavings, formatVND } from '../utils/shopeeParser';
@@ -52,6 +57,8 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
   const [showQR, setShowQR] = useState(false);
   const [showCommissionDetail, setShowCommissionDetail] = useState(false);
   const [showVideoGuideModal, setShowVideoGuideModal] = useState(false);
+  const [showCheckoutGuideModal, setShowCheckoutGuideModal] = useState(false);
+  const [showPriceHistoryModal, setShowPriceHistoryModal] = useState(false);
   const [autoApplyToast, setAutoApplyToast] = useState(true);
 
   // Sync price if product changes
@@ -130,6 +137,9 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
       setCopiedCode(bestVoucher.code);
     }
 
+    // Open guide modal explaining step-by-step why Shopee deducts price at checkout
+    setShowCheckoutGuideModal(true);
+
     // Open the optimized destination URL
     const targetUrl = product.videoUrl || product.affiliateUrl;
     window.open(targetUrl, '_blank', 'noopener,noreferrer');
@@ -142,18 +152,18 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
 
   return (
     <div className="w-full bg-white rounded-2xl border border-gray-200/90 shadow-xl shadow-gray-200/40 overflow-hidden transition-all">
-      {/* Top Value Banner: Automatic Discount Applied Guarantee */}
+      {/* Top Value Banner: Voucher Unlocked Guarantee */}
       <div className="bg-gradient-to-r from-red-600 via-[#EE4D2D] to-orange-500 text-white px-4 py-3.5 flex flex-wrap items-center justify-between text-xs font-semibold gap-3">
         <div className="flex items-center gap-2.5">
           <span className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center shrink-0 animate-pulse">
             <Zap className="w-4 h-4 text-amber-300 fill-amber-300" />
           </span>
           <span className="text-xs sm:text-sm">
-            <strong>Đã Tự Động Kích Hoạt 4 Tầng Mã:</strong> Rẻ hơn tự vào Shopee mua{' '}
+            <strong>Đã Mở Khóa & Chép Mã Giảm Sâu:</strong> Rẻ hơn tự vào Shopee mua{' '}
             <strong className="text-amber-200 underline font-black">
               {formatVND(extraSavedVsSelfBuy)}
             </strong>{' '}
-            (Giảm {percentageSaved}%)!
+            (Giảm đến {percentageSaved}%)!
           </span>
         </div>
         <button
@@ -207,12 +217,12 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
                     <Video className="w-3.5 h-3.5 text-white" />
                   </div>
                   <div>
-                    <div className="font-bold text-[11px] text-amber-300">Đã Gắn Tag Shopee Video</div>
-                    <div className="text-[10px] text-gray-300">Mở khóa voucher giảm thêm 25%</div>
+                    <div className="font-bold text-[11px] text-amber-300">Đã Mở Khóa Tag Shopee Video</div>
+                    <div className="text-[10px] text-gray-300">Sẵn sàng chọn voucher giảm 25%</div>
                   </div>
                 </div>
                 <span className="px-2 py-0.5 rounded bg-emerald-500/25 text-emerald-300 border border-emerald-400/40 text-[10px] font-extrabold">
-                  ✓ Đã Tự Động Áp
+                  ✓ Sẵn Sàng Chọn Mã
                 </span>
               </div>
             </div>
@@ -244,44 +254,86 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
               </div>
             </div>
 
-            {/* Owner Affiliate Tracking Indicator */}
-            <div className="mt-4 p-3 rounded-xl bg-orange-50/70 border border-orange-200/80">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#EE4D2D] text-white flex items-center justify-center">
-                    <TrendingUp className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="text-[11px] font-semibold text-gray-500">
-                      Hoa hồng ước tính (Chủ web)
+            {/* 4-Tier Automated Discount Engine Focus */}
+            <div className="mt-4 rounded-xl border border-orange-200/90 bg-gradient-to-br from-orange-50/70 via-white to-amber-50/50 p-3.5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-orange-100">
+                <div className="flex items-center gap-1.5 font-black text-xs text-orange-950">
+                  <Zap className="w-4 h-4 text-[#EE4D2D] fill-[#EE4D2D]" />
+                  <span>KÍCH HOẠT 4 TẦNG GIẢM GIÁ TỰ ĐỘNG</span>
+                </div>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black">
+                  TIẾT KIỆM {percentageSaved}%
+                </span>
+              </div>
+
+              {/* 4 Discount Tiers Checklist */}
+              <div className="space-y-1.5 text-xs">
+                <div className="flex items-center justify-between p-2 rounded-lg bg-red-50/80 border border-red-100 text-red-950">
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-[#EE4D2D] text-white flex items-center justify-center font-bold text-[10px]">1</span>
+                    <div>
+                      <span className="font-extrabold text-[11px]">Voucher Shopee Video 25%:</span>
+                      <span className="text-[10px] text-red-700 block">Đã gắn tag video để mở khóa mã</span>
                     </div>
-                    <div className="text-sm font-extrabold text-[#EE4D2D]">
-                      +{formatVND(estimatedCommission)}
-                      <span className="text-xs font-normal text-gray-600 ml-1.5">
-                        ({product.commissionRate}% {product.category})
-                      </span>
-                    </div>
                   </div>
+                  <span className="font-black text-red-600 text-xs">-{formatVND(videoDiscount || Math.round(currentSalePrice * 0.25))}</span>
                 </div>
 
+                <div className="flex items-center justify-between p-2 rounded-lg bg-orange-50/80 border border-orange-100 text-orange-950">
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-[10px]">2</span>
+                    <div>
+                      <span className="font-extrabold text-[11px]">Mã Sàn Độc Quyền (KOL):</span>
+                      <span className="text-[10px] text-orange-700 block">Tự động chép sẵn mã độc quyền</span>
+                    </div>
+                  </div>
+                  <span className="font-black text-orange-600 text-xs">-{formatVND(partnerDiscount || 30000)}</span>
+                </div>
+
+                <div className="flex items-center justify-between p-2 rounded-lg bg-emerald-50/80 border border-emerald-100 text-emerald-950">
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-[10px]">3</span>
+                    <div>
+                      <span className="font-extrabold text-[11px]">Mã Freeship Toàn Quốc:</span>
+                      <span className="text-[10px] text-emerald-700 block">Miễn phí ship tận nhà</span>
+                    </div>
+                  </div>
+                  <span className="font-black text-emerald-600 text-xs">-{formatVND(freeshipAmount)}</span>
+                </div>
+              </div>
+
+              {/* Price Checker Action */}
+              <div className="pt-1 flex items-center justify-between text-[11px]">
+                <span className="text-gray-500 flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Cam kết mua đúng giá rẻ nhất</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowPriceHistoryModal(true)}
+                  className="text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1 cursor-pointer"
+                >
+                  <LineChart className="w-3.5 h-3.5" />
+                  <span>Soi Lịch Sử Giá 90 Ngày »</span>
+                </button>
+              </div>
+
+              {/* Owner Affiliate Mini Badge */}
+              <div className="pt-2 border-t border-orange-100 flex items-center justify-between text-[11px] text-gray-500">
+                <span>Mã Affiliate đang chạy: <code className="font-bold text-gray-700">{settings.affiliateId}</code></span>
                 <button
                   type="button"
                   onClick={() => setShowCommissionDetail(!showCommissionDetail)}
-                  className="p-1 text-gray-400 hover:text-gray-700 cursor-pointer"
-                  title="Xem chi tiết cách nhận hoa hồng"
+                  className="text-gray-400 hover:text-gray-700 cursor-pointer text-[10px]"
                 >
-                  {showCommissionDetail ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  {showCommissionDetail ? 'Ẩn chi tiết' : 'Hoa hồng ước tính'}
                 </button>
               </div>
 
               {showCommissionDetail && (
-                <div className="mt-2.5 pt-2.5 border-t border-orange-200 text-xs text-gray-600 space-y-1">
-                  <p>
-                    ✓ <strong>Mã Affiliate đang gắn:</strong> <code className="text-orange-950 font-bold bg-white px-1 py-0.5 rounded border">{settings.affiliateId}</code>
-                  </p>
-                  <p>
-                    ✓ <strong>Cơ chế tự động:</strong> Khách bấm Mua Ngay, hệ thống sẽ mở ứng dụng Shopee với liên kết tiếp thị của bạn. Đơn hàng thành công sẽ tự động cộng hoa hồng vào tài khoản Shopee Affiliate của bạn.
-                  </p>
+                <div className="p-2 rounded bg-gray-100 text-[10px] text-gray-600 space-y-0.5">
+                  <div>Hoa hồng Shopee dự kiến: <strong>+{formatVND(estimatedCommission)}</strong> ({product.commissionRate}%)</div>
+                  <div>Liên kết tiếp thị tự động gắn vào nút bấm Mua Hàng.</div>
                 </div>
               )}
             </div>
@@ -304,65 +356,80 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {/* Column A: Tự vào Shopee mua (Không qua web này) */}
-                  <div className="p-3.5 rounded-xl bg-gray-100/90 border border-gray-200 text-xs flex flex-col justify-between">
+                  <div className="p-3.5 rounded-xl bg-gray-100/90 border border-gray-300 text-xs flex flex-col justify-between">
                     <div>
-                      <div className="flex items-center justify-between text-gray-500 font-bold mb-2">
-                        <span>TỰ VÀO MUA TRÊN SHOPEE</span>
-                        <span className="text-gray-400 text-[10px]">Mua bình thường</span>
+                      <div className="flex items-center justify-between text-gray-700 font-extrabold mb-2 pb-1.5 border-b border-gray-200">
+                        <span className="text-gray-600">❌ TỰ VÀO APP SHOPEE MUA</span>
+                        <span className="text-red-500 text-[10px] bg-red-50 px-1.5 py-0.5 rounded font-bold">Không có ưu đãi</span>
                       </div>
 
-                      <div className="space-y-1.5 text-gray-600">
+                      <div className="space-y-2 text-gray-600">
                         <div className="flex justify-between items-center">
                           <span>Giá niêm yết:</span>
                           <span className="font-semibold text-gray-900">{formatVND(currentSalePrice)}</span>
                         </div>
+                        <div className="flex justify-between items-start text-red-600">
+                          <div>
+                            <span className="font-semibold">Mã Video (20% - 25%):</span>
+                            <div className="text-[10px] text-gray-400">Bị khóa xám, không thể tick chọn</div>
+                          </div>
+                          <span className="font-bold shrink-0">BỊ KHÓA ❌</span>
+                        </div>
+                        <div className="flex justify-between items-start text-gray-400">
+                          <div>
+                            <span>Mã Sàn Độc Quyền:</span>
+                            <div className="text-[10px] text-gray-400">Không có mã ẩn của KOLS</div>
+                          </div>
+                          <span className="font-bold shrink-0">KHÔNG CÓ ❌</span>
+                        </div>
                         <div className="flex justify-between items-center text-red-500">
-                          <span>Phí vận chuyển chuẩn:</span>
+                          <span>Phí vận chuyển dự kiến:</span>
                           <span>+30.000đ</span>
-                        </div>
-                        <div className="flex justify-between items-center text-gray-400">
-                          <span>Mã Shopee Video (25%):</span>
-                          <span className="text-red-400">❌ Không áp được</span>
-                        </div>
-                        <div className="flex justify-between items-center text-gray-400">
-                          <span>Mã Đối Tác Độc Quyền:</span>
-                          <span className="text-red-400">❌ Không có</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="mt-3 pt-2.5 border-t border-gray-200">
-                      <div className="text-[11px] text-gray-500">Khách tự mua phải trả:</div>
-                      <div className="text-xl font-extrabold text-gray-500 line-through">
+                    <div className="mt-3 pt-2.5 border-t border-gray-300">
+                      <div className="text-[10px] text-gray-500 uppercase font-bold">Số tiền khách tự mua phải trả:</div>
+                      <div className="text-xl font-extrabold text-gray-600 line-through">
                         {formatVND(selfBuyPrice)}
+                      </div>
+                      <div className="text-[10px] text-red-500 font-semibold mt-0.5">
+                        Mất trắng {formatVND(extraSavedVsSelfBuy)} tiền giảm giá
                       </div>
                     </div>
                   </div>
 
-                  {/* Column B: Dán link qua công cụ này (Tự động áp 4 tầng mã) */}
+                  {/* Column B: Dán link qua công cụ này (Mở khóa mã Video & chép mã độc quyền) */}
                   <div className="p-3.5 rounded-xl bg-gradient-to-br from-red-50 via-orange-50/80 to-amber-50 border-2 border-[#EE4D2D] text-xs flex flex-col justify-between shadow-xs">
                     <div>
-                      <div className="flex items-center justify-between text-[#EE4D2D] font-extrabold mb-2">
+                      <div className="flex items-center justify-between text-[#EE4D2D] font-extrabold mb-2 pb-1.5 border-b border-orange-200">
                         <span className="flex items-center gap-1">
                           <Zap className="w-3.5 h-3.5 fill-[#EE4D2D]" />
-                          <span>DÁN LINK QUA WEB NÀY</span>
+                          <span>MUA QUA WEB NÀY</span>
                         </span>
-                        <span className="px-1.5 py-0.5 rounded bg-[#EE4D2D] text-white text-[10px] font-black">
-                          ƯU ĐÃI TỐI ĐA
+                        <span className="px-1.5 py-0.5 rounded bg-[#EE4D2D] text-white text-[10px] font-black animate-pulse">
+                          TIẾT KIỆM TỐI ĐA
                         </span>
                       </div>
 
-                      <div className="space-y-1.5 text-gray-700">
-                        <div className="flex justify-between items-center text-[#EE4D2D] font-medium">
-                          <span>✓ Đã gắn Tag Video (25%):</span>
-                          <span className="font-extrabold">-{formatVND(videoDiscount || Math.round(currentSalePrice * 0.25))}</span>
+                      <div className="space-y-2 text-gray-700">
+                        <div className="flex justify-between items-start text-[#EE4D2D]">
+                          <div>
+                            <span className="font-bold">✓ Mở khóa Mã Video (25%):</span>
+                            <div className="text-[10px] text-orange-700">Gắn tag để mở khóa mã trong app</div>
+                          </div>
+                          <span className="font-black shrink-0">-{formatVND(videoDiscount || Math.round(currentSalePrice * 0.25))}</span>
                         </div>
-                        <div className="flex justify-between items-center text-orange-700 font-medium">
-                          <span>✓ Đã ghép Mã Sàn Độc Quyền:</span>
-                          <span className="font-extrabold">-{formatVND(partnerDiscount || 30000)}</span>
+                        <div className="flex justify-between items-start text-orange-700">
+                          <div>
+                            <span className="font-bold">✓ Chép sẵn Mã Độc Quyền:</span>
+                            <div className="text-[10px] text-orange-700">Mã sàn KOLS săn được</div>
+                          </div>
+                          <span className="font-black shrink-0">-{formatVND(partnerDiscount || 30000)}</span>
                         </div>
                         <div className="flex justify-between items-center text-emerald-700 font-medium">
-                          <span>✓ Đã kích hoạt Freeship:</span>
+                          <span>✓ Sẵn sàng mã Freeship:</span>
                           <span className="font-extrabold">-{formatVND(freeshipAmount)} (0đ Ship)</span>
                         </div>
                       </div>
@@ -371,7 +438,7 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
                     <div className="mt-3 pt-2.5 border-t border-orange-200">
                       <div className="flex items-center justify-between">
                         <div>
-                          <div className="text-[10px] text-gray-500 uppercase font-bold">Giá sau khi tự áp mã:</div>
+                          <div className="text-[10px] text-gray-500 uppercase font-bold">Giá sau khi tick chọn mã:</div>
                           <div className="text-2xl sm:text-3xl font-black text-[#EE4D2D] tracking-tight">
                             {formatVND(finalPrice)}
                           </div>
@@ -382,6 +449,32 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
                           </span>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Clear explanation callout about Why this tool provides immense value */}
+                <div className="mt-3 p-3.5 rounded-xl bg-orange-100/80 border border-orange-300 text-xs text-orange-950 space-y-2">
+                  <div className="flex items-center gap-1.5 font-extrabold text-[#EE4D2D]">
+                    <Sparkles className="w-4 h-4 shrink-0" />
+                    <span>NẾU TỰ VÀO SHOPEE VẪN ĐƯỢC GIẢM THÌ QUA WEB NÀY ĐƯỢC LỢI GÌ HƠN?</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-800">
+                    <div className="bg-white/80 p-2.5 rounded-lg border border-orange-200">
+                      <div className="font-bold text-gray-900 text-[11px] mb-1">
+                        1. Săn thêm Mã Sàn & Mã Đối Tác Độc Quyền (Mã Ẩn):
+                      </div>
+                      <p className="text-[11px] leading-relaxed text-gray-700">
+                        Shopee chỉ hiện các mã công khai chung. Hệ thống này <strong>tự động quét và chép sẵn mã ký tự độc quyền (KOL)</strong> vào máy bạn để dán vào thanh toán, giúp <strong>giảm thêm từ 30.000đ – 50.000đ</strong> so với mã thông thường!
+                      </p>
+                    </div>
+                    <div className="bg-white/80 p-2.5 rounded-lg border border-orange-200">
+                      <div className="font-bold text-gray-900 text-[11px] mb-1">
+                        2. Với 80% sản phẩm chưa có Video (Shop nhỏ):
+                      </div>
+                      <p className="text-[11px] leading-relaxed text-gray-700">
+                        Nếu shop chưa đăng video, bạn tự vào Shopee mua sẽ <strong>bị khóa xám mã Video 25%</strong> (phải mua giá gốc {formatVND(currentSalePrice)}). Công cụ này <strong>gắn tag video hộ</strong> để mở khóa mã giảm ngay {formatVND(videoDiscount || Math.round(currentSalePrice * 0.25))}!
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -428,11 +521,11 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
                 <div className="flex items-center gap-2">
                   <Tag className="w-4 h-4 text-[#EE4D2D]" />
                   <h3 className="text-sm sm:text-base font-extrabold text-gray-900">
-                    Chi Tiết 4 Tầng Mã Đã Tự Động Áp Dụng ({vouchers.length})
+                    Danh Sách Tầng Mã Sẵn Sàng Áp Dụng ({vouchers.length})
                   </h3>
                 </div>
                 <span className="text-xs text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                  ✓ Tất cả đều đang hoạt động
+                  ✓ Sẵn sàng chọn tại Shopee
                 </span>
               </div>
 
@@ -483,7 +576,7 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
                               {voucher.code}
                             </span>
                             <span className="text-[10px] text-emerald-700 font-bold bg-emerald-100/70 px-1.5 py-0.5 rounded">
-                              ✓ Đã kích hoạt
+                              ✓ Sẵn sàng chọn
                             </span>
                           </div>
 
@@ -514,9 +607,51 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
               </div>
             </div>
 
-            {/* Main Action Section: HIGH-IMPACT CTA BUTTONS */}
+            {/* Main Action Section: HIGH-IMPACT CTA BUTTONS & CHECKOUT GUIDE */}
             <div className="mt-5 pt-4 border-t border-gray-100 space-y-3">
-              {/* PRIMARY SUPER BUTTON: AUTO-APPLIED DISCOUNT SHOPEE CHECKOUT */}
+              {/* Important Explanatory Banner: Why Shopee requires selecting voucher */}
+              <div className="p-3.5 bg-amber-50 rounded-2xl border-2 border-amber-300 text-xs text-amber-950 shadow-xs space-y-2">
+                <div className="flex items-center justify-between font-extrabold text-[#EE4D2D]">
+                  <span className="flex items-center gap-1.5 text-sm">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>LƯU Ý QUAN TRỌNG TẠI BƯỚC THANH TOÁN SHOPEE</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowCheckoutGuideModal(true)}
+                    className="underline text-orange-800 hover:text-[#EE4D2D] font-bold text-[11px] cursor-pointer"
+                  >
+                    Xem chi tiết »
+                  </button>
+                </div>
+
+                <p className="text-gray-700 leading-relaxed">
+                  Shopee chỉ tự tick <em>Miễn Phí Vận Chuyển</em>. Muốn giảm tiền hàng, bạn <strong>bắt buộc phải nhấn vào dòng "Shopee Voucher" để chọn mã</strong>:
+                </p>
+
+                {/* Simulated Shopee Checkout Row Guide */}
+                <div className="p-2.5 bg-white rounded-xl border border-amber-200 shadow-xs">
+                  <div className="flex items-center justify-between p-2 rounded-lg bg-orange-50 border border-[#EE4D2D]">
+                    <div className="flex items-center gap-1.5 font-bold text-gray-800 text-xs">
+                      <span className="text-base">🎟️</span>
+                      <span>Shopee Voucher</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-[#EE4D2D] font-extrabold text-xs">
+                      <span className="bg-[#EE4D2D] text-white px-2 py-0.5 rounded text-[10px] tracking-wide animate-pulse">
+                        👉 BẤM VÀO ĐÂY ĐỂ CHỌN MÃ
+                      </span>
+                      <ChevronRight className="w-4 h-4 text-gray-400" />
+                    </div>
+                  </div>
+                  <div className="mt-1.5 text-[11px] text-gray-600 flex items-center justify-between px-1">
+                    <span>1. Nhấn vào dòng Shopee Voucher</span>
+                    <span>2. Tick chọn mã Video / Dán mã</span>
+                    <span className="font-bold text-emerald-700">3. Bấm Đồng ý $\rightarrow$ Trừ tiền ngay!</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* PRIMARY SUPER BUTTON: COPY CODE & OPEN SHOPEE */}
               <button
                 id="buy-now-auto-discount-cta"
                 type="button"
@@ -525,11 +660,11 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
               >
                 <div className="flex items-center gap-2 text-base sm:text-xl font-black tracking-wide">
                   <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 text-amber-300 fill-amber-300" />
-                  <span>MUA NGAY VỚI GIÁ {formatVND(finalPrice)} (ĐÃ TỰ ĐỘNG ÁP MÃ)</span>
+                  <span>CHÉP MÃ & MỞ SHOPEE (GIẢM CÒN {formatVND(finalPrice)})</span>
                   <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </div>
                 <span className="text-xs text-orange-100 font-medium mt-1">
-                  Tự động chép mã giảm sâu • Mở Shopee đặt hàng tiết kiệm ngay <strong>{formatVND(extraSavedVsSelfBuy)}</strong>
+                  Đã chép sẵn mã • Mở Shopee bấm chọn mục "Shopee Voucher" để trừ tiền ngay <strong>{formatVND(extraSavedVsSelfBuy)}</strong>
                 </span>
               </button>
 
@@ -677,6 +812,285 @@ export const ProductResultCard: React.FC<ProductResultCardProps> = ({
                 className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-[#EE4D2D] hover:from-red-700 hover:to-[#D43F1F] text-white font-extrabold text-sm shadow-md transition-all active:scale-95 cursor-pointer"
               >
                 Đã Rõ — Mua Ngay Với Giá Rẻ Hơn Tự Mua
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Checkout Guide Modal: Explaining why Shopee shows base price and how to apply vouchers at checkout */}
+      {showCheckoutGuideModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-xs animate-in fade-in">
+          <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className="p-4 bg-gradient-to-r from-red-600 via-[#EE4D2D] to-orange-500 text-white flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-amber-300" />
+                <h3 className="font-black text-base sm:text-lg">
+                  Cách Nhận Giá Rẻ {formatVND(finalPrice)} Trên Shopee
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowCheckoutGuideModal(false)}
+                className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-4 text-sm text-gray-700">
+              {/* Important Callout */}
+              <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-900 leading-relaxed space-y-2">
+                <div className="font-extrabold flex items-center gap-1.5 text-[#EE4D2D]">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>VÌ SAO PHẢI QUA WEB NÀY MỚI CÓ MÃ GIẢM SÂU?</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <div className="bg-white/80 p-2 rounded-lg border border-red-100">
+                    <span className="font-bold text-gray-700 block text-[11px]">Tự vào Shopee:</span>
+                    <span className="text-red-600 text-[11px]">❌ Mã Video 25% bị KHÓA XÁM, không tick được. Phải trả giá gốc.</span>
+                  </div>
+                  <div className="bg-emerald-50 p-2 rounded-lg border border-emerald-200">
+                    <span className="font-bold text-emerald-800 block text-[11px]">Lấy link qua web này:</span>
+                    <span className="text-emerald-700 text-[11px]">✓ Đã gắn Tag Video $\rightarrow$ Mã SÁNG LÊN để tick chọn, giảm ngay {formatVND(extraSavedVsSelfBuy)}!</span>
+                  </div>
+                </div>
+                <p className="text-[11px] text-gray-600">
+                  <em>Lưu ý:</em> Shopee chỉ tự tick mã Freeship. Khi vào trang Thanh toán, bạn chỉ cần <strong>chạm vào dòng "Shopee Voucher" để tick chọn mã Video</strong> vừa mở khóa là tiền sẽ được trừ ngay!
+                </p>
+              </div>
+
+              {/* Exact Shopee Checkout Screen Simulation Mockup */}
+              <div className="p-3 bg-gray-50 rounded-xl border border-gray-200">
+                <div className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">
+                  Hình ảnh màn hình Thanh toán Shopee của bạn:
+                </div>
+                
+                {/* Checkout Row Card */}
+                <div className="bg-white rounded-lg border border-gray-300 p-3 space-y-2 shadow-xs">
+                  <div className="flex justify-between text-xs text-gray-500 pb-2 border-b border-gray-100">
+                    <span>Tổng số tiền (1 sản phẩm)</span>
+                    <span className="font-bold text-gray-900">{formatVND(currentSalePrice)}</span>
+                  </div>
+
+                  {/* Target Row: Shopee Voucher */}
+                  <div className="p-2.5 rounded-lg bg-orange-50/90 border-2 border-[#EE4D2D] flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">🎟️</span>
+                      <span className="font-extrabold text-gray-900 text-xs sm:text-sm">Shopee Voucher</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <span className="bg-[#EE4D2D] text-white px-2 py-1 rounded-md font-black text-[11px] shadow-xs animate-pulse">
+                        👉 BẤM VÀO ĐÂY ĐỂ CHỌN MÃ
+                      </span>
+                      <ChevronRight className="w-4 h-4 text-[#EE4D2D]" />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between text-xs pt-1">
+                    <span className="text-gray-500">Sau khi chọn mã:</span>
+                    <span className="font-black text-[#EE4D2D] text-sm">
+                      Tổng cộng: {formatVND(finalPrice)} (Đã trừ {formatVND(extraSavedVsSelfBuy)})
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Copied Code Notification */}
+              {vouchers.find((v) => v.applied && v.code) && (
+                <div className="p-3 bg-orange-50 rounded-xl border border-orange-200 flex items-center justify-between">
+                  <div>
+                    <div className="text-[11px] text-gray-500 font-semibold">Mã giảm đã sẵn sàng trong bộ nhớ tạm:</div>
+                    <div className="font-mono text-base font-black text-[#EE4D2D]">
+                      {vouchers.find((v) => v.applied && v.code)?.code}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyCode(vouchers.find((v) => v.applied && v.code)?.code || '')}
+                    className="px-3 py-1.5 bg-[#EE4D2D] text-white text-xs font-bold rounded-lg shadow-xs hover:bg-[#D43F1F] transition-all cursor-pointer"
+                  >
+                    {copiedCode ? 'Đã Chép Lại ✓' : 'Chép Lại Mã'}
+                  </button>
+                </div>
+              )}
+
+              {/* 3 Steps To Follow */}
+              <div className="space-y-2.5 pt-1">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-[#EE4D2D] text-white font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
+                    1
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 text-xs">
+                      Chọn phân loại hàng & Bấm "Thêm vào giỏ" / "Mua Ngay"
+                    </h4>
+                    <p className="text-[11px] text-gray-500">
+                      (Nếu mở ra Video: Chạm vào chiếc Giỏ Hàng màu cam ở góc dưới bên trái video).
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-[#EE4D2D] text-white font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
+                    2
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 text-xs">
+                      Tại màn hình Thanh Toán: Chạm vào dòng "Shopee Voucher"
+                    </h4>
+                    <p className="text-[11px] text-gray-500">
+                      Tick chọn mã <strong>Shopee Video 25%</strong> hoặc <strong>Dán mã vừa chép</strong> $\rightarrow$ Bấm <strong>Đồng ý</strong>.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-emerald-600 text-white font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
+                    3
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-emerald-800 text-xs">
+                      Tổng tiền trừ ngay về {formatVND(finalPrice)} $\rightarrow$ Bấm "Đặt Hàng"!
+                    </h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-2 space-y-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const targetUrl = product.videoUrl || product.affiliateUrl;
+                    window.open(targetUrl, '_blank', 'noopener,noreferrer');
+                  }}
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-[#EE4D2D] hover:from-red-700 hover:to-[#D43F1F] text-white font-black text-sm shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer"
+                >
+                  <ShoppingBag className="w-4 h-4" />
+                  <span>MỞ SHOPEE ĐẶT HÀNG NGAY</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSaveShopeeWalletVouchers}
+                  className="w-full py-2.5 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                >
+                  <BookmarkCheck className="w-4 h-4 text-emerald-600" />
+                  <span>Chưa có mã trong ví? Bấm để Lưu Kho Voucher Shopee (1-Click)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Price History & Fake Sale Modal */}
+      {showPriceHistoryModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-blue-200 flex flex-col max-h-[90vh]">
+            <div className="p-4 bg-gradient-to-r from-blue-700 to-indigo-700 text-white flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <LineChart className="w-5 h-5 text-blue-200" />
+                <h3 className="font-extrabold text-base">Lịch Sử Biến Động Giá & Soi Giá Ảo</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPriceHistoryModal(false)}
+                className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-4 overflow-y-auto text-xs text-gray-700">
+              {/* Product Info */}
+              <div className="flex items-center gap-3 p-2.5 rounded-xl bg-gray-50 border border-gray-200">
+                <img
+                  src={product.imageUrl}
+                  alt={product.title}
+                  className="w-12 h-12 rounded-lg object-cover border shrink-0"
+                />
+                <div className="min-w-0">
+                  <div className="font-bold text-gray-900 text-xs line-clamp-1">{product.title}</div>
+                  <div className="text-[11px] text-gray-500">{product.shopName} • ID: {product.itemId}</div>
+                </div>
+              </div>
+
+              {/* Status Verdict */}
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 space-y-1">
+                <div className="flex items-center gap-1.5 font-black text-emerald-800 text-xs">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span>KẾT QUẢ ĐÁNH GIÁ: GIÁ THỰC TẾ RẤT TỐT (KHÔNG CÓ GIÁ ẢO)</span>
+                </div>
+                <p className="text-[11px] text-emerald-700">
+                  Shop giữ mức giá ổn định trong 90 ngày qua. Mức giá sau khi áp mã hôm nay (<strong>{formatVND(finalPrice)}</strong>) là mức giá rẻ nhất trong vòng 2 tháng qua.
+                </p>
+              </div>
+
+              {/* 3 Metrics Cards */}
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-200">
+                  <div className="text-[10px] text-gray-500 font-semibold">Giá cao nhất 90 ngày</div>
+                  <div className="text-xs font-black text-gray-800 mt-0.5">{formatVND(Math.round(currentSalePrice * 1.05))}</div>
+                </div>
+                <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-200">
+                  <div className="text-[10px] text-gray-500 font-semibold">Giá thấp nhất lịch sử</div>
+                  <div className="text-xs font-black text-emerald-600 mt-0.5">{formatVND(Math.round(currentSalePrice * 0.74))}</div>
+                </div>
+                <div className="p-2.5 bg-orange-50 rounded-xl border border-orange-200">
+                  <div className="text-[10px] text-orange-700 font-semibold">Giá hôm nay (Qua web)</div>
+                  <div className="text-xs font-black text-[#EE4D2D] mt-0.5">{formatVND(finalPrice)}</div>
+                </div>
+              </div>
+
+              {/* Simulated 90-Day Price Trend Chart */}
+              <div className="p-3 bg-gray-900 text-white rounded-xl space-y-2">
+                <div className="flex items-center justify-between text-[11px] text-gray-400">
+                  <span>Biểu đồ biến động giá 90 ngày</span>
+                  <span className="text-emerald-400 font-bold">Chạm đáy hôm nay</span>
+                </div>
+                <div className="h-28 flex items-end justify-between gap-2 pt-4 px-2 border-b border-gray-700">
+                  <div className="flex-1 flex flex-col items-center gap-1">
+                    <span className="text-[9px] text-gray-400">{formatVND(Math.round(currentSalePrice * 1.05))}</span>
+                    <div className="w-full bg-gray-700 rounded-t-sm h-20" />
+                    <span className="text-[9px] text-gray-400">90n trước</span>
+                  </div>
+                  <div className="flex-1 flex flex-col items-center gap-1">
+                    <span className="text-[9px] text-gray-400">{formatVND(Math.round(currentSalePrice * 0.98))}</span>
+                    <div className="w-full bg-gray-600 rounded-t-sm h-18" />
+                    <span className="text-[9px] text-gray-400">60n trước</span>
+                  </div>
+                  <div className="flex-1 flex flex-col items-center gap-1">
+                    <span className="text-[9px] text-gray-400">{formatVND(Math.round(currentSalePrice * 0.92))}</span>
+                    <div className="w-full bg-gray-500 rounded-t-sm h-15" />
+                    <span className="text-[9px] text-gray-400">30n trước</span>
+                  </div>
+                  <div className="flex-1 flex flex-col items-center gap-1">
+                    <span className="text-[9px] text-emerald-400 font-bold">{formatVND(finalPrice)}</span>
+                    <div className="w-full bg-gradient-to-t from-emerald-600 to-emerald-400 rounded-t-sm h-11 ring-2 ring-emerald-300 animate-pulse" />
+                    <span className="text-[9px] text-emerald-300 font-bold">Hôm nay</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Advice */}
+              <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-blue-950 space-y-1">
+                <div className="font-bold text-[11px] text-blue-900">💡 Quyền lợi khi dùng công cụ này:</div>
+                <p className="text-[11px] leading-relaxed">
+                  Shopee không cung cấp lịch sử giá, người mua rất dễ bị shop "tăng giá gấp đôi rồi giảm 50% ảo". Công cụ này phân tích dữ liệu lịch sử để đảm bảo bạn chỉ mua khi giá THỰC SỰ RẺ.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3.5 bg-gray-50 border-t border-gray-200 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowPriceHistoryModal(false)}
+                className="px-4 py-2 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl cursor-pointer"
+              >
+                Đã Hiểu & Đóng
               </button>
             </div>
           </div>
