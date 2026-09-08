@@ -1,0 +1,6 @@
+{
+  "name": "Shopee Deal & Affiliate Converter",
+  "description": "Công cụ dán link Shopee tự động áp mã giảm giá độc quyền, tối ưu giá mua sắm và tạo link Affiliate nhận hoa hồng.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
