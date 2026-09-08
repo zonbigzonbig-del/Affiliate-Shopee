@@ -75,13 +75,13 @@ export const LinkSearchBox: React.FC<LinkSearchBoxProps> = ({
       <div className="text-center max-w-2xl mx-auto mb-5 sm:mb-6">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 border border-orange-200/70 text-[#EE4D2D] text-xs font-semibold mb-2">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Tự Động Tìm Mã Giảm Giá Shopee & Tạo Link Hoa Hồng</span>
+          <span>⚡ Tự Động Gắn Tag Shopee Video — Kích Hoạt Mã Giảm Sâu Đến 50%</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-          Dán Link Shopee Nhận Ưu Đãi Giảm Giá
+          Dán Link Shopee — Mở Qua Video Để Giảm Thêm 25% - 50%
         </h1>
         <p className="text-sm sm:text-base text-gray-600 mt-1.5">
-          Khách hàng được áp voucher giảm đến <strong className="text-[#EE4D2D]">50% & Freeship</strong>, bạn tự động nhận <strong className="text-emerald-600">hoa hồng tiếp thị liên kết (Affiliate)</strong> cho mỗi đơn hàng!
+          Sản phẩm tìm kiếm thông thường <span className="underline decoration-red-400 font-semibold">không thể áp mã Shopee Video</span>. Dán link vào đây để tự động gắn vào Video, mở mua là được <strong className="text-[#EE4D2D]">trừ thêm đến 70.000đ - 100.000đ</strong> và Freeship!
         </p>
       </div>
 
@@ -138,7 +138,7 @@ export const LinkSearchBox: React.FC<LinkSearchBoxProps> = ({
                 </>
               ) : (
                 <>
-                  <span>Áp Mã & Lấy Link</span>
+                  <span>Gắn Tag Video & Lấy Link Giảm</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}

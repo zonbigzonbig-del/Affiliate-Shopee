@@ -37,6 +37,9 @@ export interface ShopeeProduct {
   originalUrl: string;
   affiliateUrl: string;
   deepLink: string;
+  videoUrl: string; // Direct link opening Shopee Video with attached product
+  videoDeepLink: string; // App scheme link to open Shopee Video cart
+  videoVoucherDiscount: number; // Max discount saved by Shopee Video voucher
   vouchers: Voucher[];
 }
 
@@ -45,7 +48,9 @@ export interface AffiliateSettings {
   subId: string; // tracking sub-id e.g. "web_deal"
   networkType: 'shopee_direct' | 'accesstrade' | 'ecomobi' | 'custom' | 'universal_tag';
   customDomain: string; // e.g. s.shopee.vn or custom redirect
+  shopeeVideoCreatorId?: string; // e.g., Creator ID / Shopee Video user
   autoApplyBestVoucher: boolean;
+  enableVideoTagging: boolean; // Auto-attach product to Shopee Video to unlock 20-50% off
 }
 
 export interface ConvertedHistoryItem {

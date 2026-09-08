@@ -180,6 +180,39 @@ export const OwnerAffiliateModal: React.FC<OwnerAffiliateModalProps> = ({
                 </select>
               </div>
 
+              {/* Shopee Video Tagging Feature Toggle */}
+              <div className="p-3 bg-orange-50/70 border border-orange-200 rounded-xl space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-bold text-gray-900 block">
+                      ⚡ Tự Động Gắn Tag Shopee Video
+                    </span>
+                    <span className="text-[11px] text-gray-500">
+                      Tạo link mở thẳng giỏ hàng Shopee Video để khách được áp mã 25% - 50%
+                    </span>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={form.enableVideoTagging ?? true}
+                    onChange={(e) => setForm({ ...form, enableVideoTagging: e.target.checked })}
+                    className="w-4 h-4 text-[#EE4D2D] rounded border-gray-300 focus:ring-[#EE4D2D]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-gray-700 mb-0.5">
+                    Tài khoản Shopee Video Creator (nếu có):
+                  </label>
+                  <input
+                    type="text"
+                    value={form.shopeeVideoCreatorId || ''}
+                    onChange={(e) => setForm({ ...form, shopeeVideoCreatorId: e.target.value })}
+                    placeholder="Vd: AFF_ZONBIG_CREATOR"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 text-xs text-gray-900 bg-white"
+                  />
+                </div>
+              </div>
+
               {/* Custom redirect domain if selected */}
               {form.networkType === 'custom' && (
                 <div>

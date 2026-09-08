@@ -1,5 +1,11 @@
 import { ShopeeProduct, Voucher, AffiliateSettings } from '../types';
-import { generateVouchersForProduct, buildAffiliateUrl, buildShopeeDeepLink } from './shopeeParser';
+import {
+  generateVouchersForProduct,
+  buildAffiliateUrl,
+  buildShopeeDeepLink,
+  buildShopeeVideoUrl,
+  buildShopeeVideoDeepLink
+} from './shopeeParser';
 
 // Curated image mappings based on category keywords
 const CATEGORY_IMAGE_MAP: { keywords: string[]; image: string; category: string; defaultPrice: number; commissionRate: number }[] = [
@@ -229,6 +235,11 @@ export function parseShopeeUrlSmart(
 
   const affiliateUrl = buildAffiliateUrl(cleanUrl, settings);
   const deepLink = buildShopeeDeepLink(itemId, shopId, affiliateUrl);
+  const videoUrl = buildShopeeVideoUrl(itemId, shopId, cleanUrl, settings);
+  const videoDeepLink = buildShopeeVideoDeepLink(itemId, shopId, videoUrl);
+
+  // Shopee Video vouchers typically give 20% - 25% discount, capped at 70,000 VND
+  const videoVoucherDiscount = Math.min(Math.round(salePrice * 0.25), 70000);
 
   return {
     id: `prod-${Date.now()}`,
@@ -248,6 +259,9 @@ export function parseShopeeUrlSmart(
     originalUrl: cleanUrl,
     affiliateUrl,
     deepLink,
+    videoUrl,
+    videoDeepLink,
+    videoVoucherDiscount,
     vouchers,
   };
 }

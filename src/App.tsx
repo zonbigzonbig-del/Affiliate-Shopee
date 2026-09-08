@@ -10,10 +10,12 @@ import { parseShopeeLink } from './utils/shopeeParser';
 
 const DEFAULT_SETTINGS: AffiliateSettings = {
   affiliateId: 'AFF_ZONBIG_VN',
-  subId: 'web_deal',
+  subId: 'web_video_deal',
   networkType: 'shopee_direct',
   customDomain: '',
+  shopeeVideoCreatorId: 'AFF_ZONBIG_CREATOR',
   autoApplyBestVoucher: true,
+  enableVideoTagging: true,
 };
 
 export default function App() {

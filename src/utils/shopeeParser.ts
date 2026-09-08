@@ -227,6 +227,27 @@ export function buildShopeeDeepLink(itemId: string, shopId: string, affiliateUrl
   return affiliateUrl;
 }
 
+// Builds Shopee Video Link that opens the video tab with product basket attached
+export function buildShopeeVideoUrl(itemId: string, shopId: string, cleanProductUrl: string, settings: AffiliateSettings): string {
+  const affId = settings.affiliateId || 'AFF_ZONBIG_VN';
+  const subId = settings.subId || 'shopee_video';
+
+  // Shopee Video Universal Link format that triggers video viewer and displays the product yellow cart
+  // https://shopee.vn/universal-link/video/play?item_id=...&shop_id=...
+  if (itemId && shopId) {
+    return `https://shopee.vn/universal-link/video/play?item_id=${itemId}&shop_id=${shopId}&utm_source=affiliate&utm_medium=video_tag_${affId}&utm_campaign=${subId}&aff_id=${affId}&sub_id=${subId}`;
+  }
+  return buildAffiliateUrl(cleanProductUrl, settings);
+}
+
+// Builds mobile deep link to open Shopee Video Player directly in Shopee App
+export function buildShopeeVideoDeepLink(itemId: string, shopId: string, fallbackUrl: string): string {
+  if (itemId && shopId) {
+    return `shopee://universal-link/video/play?item_id=${itemId}&shop_id=${shopId}`;
+  }
+  return fallbackUrl;
+}
+
 // Parses a Shopee link into product info and applies affiliate tag
 export function parseShopeeLink(input: string, settings: AffiliateSettings): ShopeeProduct {
   // Import dynamically or delegate to the comprehensive smart parser

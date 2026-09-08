@@ -7,23 +7,23 @@ export const HowItWorks: React.FC = () => {
   const faqs = [
     {
       icon: <Gift className="w-4 h-4 text-orange-600" />,
-      q: 'Khách hàng dán link vào thì nhận được mã giảm giá như thế nào?',
-      a: 'Khi dán link sản phẩm Shopee, hệ thống lập tức quét toàn bộ kho voucher tương thích: Mã Shopee Video (giảm đến 25-50%), Mã Shopee Live (giảm đến 50k-100k), Voucher sàn và mã Miễn phí vận chuyển (Freeship Xtra). Khách hàng chỉ cần bấm nút "Mua ngay" hoặc quét mã QR để mở Shopee và lưu mã vào ví để áp dụng khi thanh toán.',
+      q: 'Tại sao khách hàng PHẢI dán link qua web này thay vì mua trực tiếp trên Shopee?',
+      a: 'Shopee có các voucher độc quyền: Shopee Video giảm 20% - 50% (lên đến 70.000đ - 100.000đ). Tuy nhiên nếu khách tự tìm kiếm sản phẩm trên Shopee thì KHÔNG THỂ áp dụng được các mã này. Khi dán link vào web, hệ thống sẽ tự động gắn sản phẩm vào Giỏ hàng Shopee Video của bạn, giúp khách hàng mở khóa mức giảm sâu chưa từng có!',
+    },
+    {
+      icon: <Zap className="w-4 h-4 text-amber-600" />,
+      q: 'Thao tác áp mã Shopee Video gồm những bước nào để chắc chắn được giảm giá?',
+      a: 'Rất đơn giản: 1. Bấm nút "MUA QUA SHOPEE VIDEO". 2. Khi Shopee mở ra màn hình video, nhìn góc dưới cùng bên trái sẽ có biểu tượng GIỎ HÀNG MÀU VÀNG. 3. Bấm vào giỏ hàng đó, chọn món hàng và thanh toán. Mã Shopee Video sẽ tự động được chọn và trừ tiền ngay lập tức!',
     },
     {
       icon: <DollarSign className="w-4 h-4 text-emerald-600" />,
       q: 'Làm sao tôi (chủ web) nhận được tiền hoa hồng Affiliate?',
-      a: 'Mỗi khi khách dán link sản phẩm và bấm nút mua hàng hoặc quét mã QR, đường link chuyển hướng được tự động gắn mã Affiliate ID của bạn (ví dụ s.shopee.vn/aff?pid=YOUR_ID). Khách hàng thực hiện thanh toán trên Shopee, Shopee sẽ ghi nhận đơn hàng và trả hoa hồng (từ 2.5% đến 14% tùy ngành hàng) vào tài khoản đối tác Shopee Affiliate của bạn.',
-    },
-    {
-      icon: <Zap className="w-4 h-4 text-amber-600" />,
-      q: 'Nếu khách mua sản phẩm khác hoặc không mua ngay thì tôi có được hoa hồng không?',
-      a: 'CÓ! Shopee áp dụng cơ chế lưu cookie 7 ngày. Khi khách bấm link của bạn, cookie được lưu trong trình duyệt hoặc App Shopee. Trong vòng 7 ngày, nếu khách mua bất kỳ sản phẩm nào trên Shopee (kể cả sản phẩm khác món họ vừa dán), bạn vẫn được tính trọn vẹn hoa hồng theo chính sách Shopee Affiliate!',
+      a: 'Mỗi khi khách bấm mua qua Shopee Video hoặc quét mã QR, đường link chuyển hướng được tự động gắn mã Affiliate ID của bạn. Đơn hàng phát sinh từ Shopee Video được Shopee ưu tiên trả mức hoa hồng Creator cực cao (từ 8% đến 15%), cao hơn gấp 2-3 lần so với link thường!',
     },
     {
       icon: <ShieldCheck className="w-4 h-4 text-blue-600" />,
-      q: 'Tôi có thể đổi mã Affiliate ID cá nhân của tôi ở đâu?',
-      a: 'Rất đơn giản, hãy bấm vào nút "Cài Đặt Affiliate" ở góc trên bên phải màn hình. Tại đó, bạn có thể điền Affiliate ID Shopee của bạn (hoặc AccessTrade, Ecomobi), Sub-ID để theo dõi chiến dịch, và xem bảng tỷ lệ hoa hồng chi tiết.',
+      q: 'Nếu khách mua sản phẩm khác hoặc đổi ý thì tôi có nhận được hoa hồng không?',
+      a: 'CÓ! Shopee áp dụng cơ chế lưu cookie 7 ngày. Khi khách bấm link qua web của bạn, cookie tiếp thị được lưu lại. Trong vòng 7 ngày tới, nếu khách mua bất kỳ sản phẩm nào trên Shopee, bạn vẫn được tính trọn vẹn hoa hồng theo chính sách Shopee Affiliate!',
     },
   ];
 
